@@ -36,7 +36,9 @@ interface AppState {
   chat: ChatMessage[]
 }
 
-const API_BASE_URL = normalizeBaseUrl(import.meta.env.VITE_API_BASE_URL ?? '')
+const API_BASE_URL = import.meta.env.DEV
+  ? ''
+  : normalizeBaseUrl(import.meta.env.VITE_API_BASE_URL ?? '')
 const STORAGE_KEY_TRANSCRIBE_LANG = 'voice-command-api.transcribe-language'
 const REQUEST_TIMEOUT_MS = 45000
 const MAX_RECORDING_MS = 20000
@@ -518,13 +520,7 @@ function inferAudioFilename(mimeType: string): string {
 }
 
 function normalizeBaseUrl(value: string): string {
-  const trimmed = value.trim()
-
-  if (!trimmed) {
-    throw new Error('Missing VITE_API_BASE_URL. Add it to frontend/.env.')
-  }
-
-  return trimmed.replace(/\/+$/, '')
+  return value.trim().replace(/\/+$/, '')
 }
 
 function stringifyData(data: unknown): string {
